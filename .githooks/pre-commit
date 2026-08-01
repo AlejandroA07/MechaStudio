@@ -1,0 +1,3 @@
+#!/bin/sh
+root="$(git rev-parse --show-toplevel)"
+exec node "$root/.harness/hooks/pre-commit.mjs"

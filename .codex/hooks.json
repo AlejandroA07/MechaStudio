@@ -1,0 +1,19 @@
+{
+  "description": "Project command and secret-file guard.",
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "sh -c 'node \"$(git rev-parse --show-toplevel)/.harness/hooks/guard-git.mjs\"'",
+            "commandWindows": "powershell -NoProfile -Command \"$root=(git rev-parse --show-toplevel); node (Join-Path $root '.harness/hooks/guard-git.mjs')\"",
+            "timeout": 10,
+            "statusMessage": "Checking command against project policy"
+          }
+        ]
+      }
+    ]
+  }
+}
