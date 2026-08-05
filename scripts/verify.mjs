@@ -1,5 +1,5 @@
-import { spawnSync } from "node:child_process";
 import process from "node:process";
+import { runTool } from "../.harness/runtime/windows-cli.mjs";
 
 const steps = [
   {
@@ -50,18 +50,14 @@ const steps = [
   {
     name: "GitHub Actions security",
     command: "zizmor",
-    args: [".github/workflows"],
+    args: ["."],
   },
 ];
-const windowsShimCommands = new Set(["npm", "pnpm", "yarn", "bun"]);
 
 for (const step of steps) {
   console.log(`\n==> ${step.name}`);
   const options = { cwd: new URL("..", import.meta.url), stdio: "inherit", shell: false };
-  const result =
-    process.platform === "win32" && windowsShimCommands.has(step.command)
-      ? spawnSync(process.env.ComSpec ?? "cmd.exe", ["/d", "/s", "/c", `${step.command}.cmd`, ...step.args], options)
-      : spawnSync(step.command, step.args, options);
+  const result = runTool(step.command, step.args, options);
   if (result.error) {
     console.error(result.error.message);
     process.exit(1);
