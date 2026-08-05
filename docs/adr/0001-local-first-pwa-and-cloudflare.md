@@ -5,7 +5,7 @@
 
 ## Context
 
-Plan & Train must be usable in browsers on iPhone, macOS, and Windows, remain inexpensive for family use, and provide a working Routine and Session experience before identity and synchronization are introduced. Local browser data must later migrate into private Profiles without replacing the Session Runner or domain model.
+MechaStudio must be usable in browsers on iPhone, macOS, and Windows, remain inexpensive for family use, and provide a working Routine and Session experience before identity and synchronization are introduced. Local browser data must later migrate into private Profiles without replacing the Session Runner or domain model.
 
 ## Decision
 

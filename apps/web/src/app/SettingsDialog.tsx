@@ -76,7 +76,7 @@ function BackupSettings({
     const url = URL.createObjectURL(blob);
     const anchor = document.createElement("a");
     anchor.href = url;
-    anchor.download = `plan-and-train-${new Date().toISOString().slice(0, 10)}.zip`;
+    anchor.download = `mechastudio-${new Date().toISOString().slice(0, 10)}.zip`;
     anchor.click();
     window.setTimeout(() => URL.revokeObjectURL(url), 1_000);
   }
@@ -340,7 +340,7 @@ function Credits() {
       <section>
         <h3>Safety</h3>
         <p>
-          Plan & Train organizes routines; it is not medical advice. Stop if movement causes pain and seek qualified
+          MechaStudio organizes routines; it is not medical advice. Stop if movement causes pain and seek qualified
           guidance when appropriate.
         </p>
       </section>

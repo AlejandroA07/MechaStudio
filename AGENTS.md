@@ -1,6 +1,6 @@
-# Plan & Train — Agent Guide
+# MechaStudio — Agent Guide
 
-Plan & Train is a responsive, local-first training PWA for family and friends. It builds Exercises, reusable Blocks, Routines, dated Plans, and guided Sessions. The stack is TypeScript, Vite, React, Dexie/IndexedDB, and a staged Cloudflare Worker/D1/R2 backend. The web application runs on Windows, macOS, and iPhone browsers.
+MechaStudio is a responsive, local-first training PWA for family and friends. It builds Exercises, reusable Blocks, Routines, dated Plans, and guided Sessions. The stack is TypeScript, Vite, React, Dexie/IndexedDB, and a staged Cloudflare Worker/D1/R2 backend. The web application runs on Windows, macOS, and iPhone browsers.
 
 This file is the project's source of truth. Keep commands, boundaries, and the definition of done current.
 

@@ -1,4 +1,4 @@
-import { exerciseSchema, type Exercise } from "@plan-and-train/domain";
+import { exerciseSchema, type Exercise } from "@mechastudio/domain";
 
 const WGER_ORIGIN = "https://wger.de";
 const firstPage = `${WGER_ORIGIN}/api/v2/exerciseinfo/?limit=100`;

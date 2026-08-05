@@ -1,6 +1,6 @@
-# Plan & Train
+# MechaStudio
 
-Plan & Train is a responsive, local-first training PWA for building Exercises, reusable Blocks, Routines, dated Plans, and guided Sessions. It runs as a normal website on Windows and macOS and can be installed from Safari on iPhone.
+MechaStudio is a responsive, local-first training PWA for building Exercises, reusable Blocks, Routines, dated Plans, and guided Sessions. It runs as a normal website on Windows and macOS and can be installed from Safari on iPhone.
 
 ## Requirements
 

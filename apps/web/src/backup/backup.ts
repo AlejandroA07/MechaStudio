@@ -1,14 +1,15 @@
 import JSZip from "jszip";
 
-import { mediaAssetSchema, type MediaAsset } from "@plan-and-train/domain";
+import { mediaAssetSchema, type MediaAsset } from "@mechastudio/domain";
 
 import type { DatabaseExport, StoredMedia, TrainingDatabase } from "../storage/training-database";
 
-const BACKUP_FILE = "plan-and-train.json";
+const BACKUP_FILE = "mechastudio.json";
+const LEGACY_BACKUP_FILE = "plan-and-train.json";
 const MAX_BACKUP_BYTES = 300 * 1024 * 1024;
 
 interface BackupDocument {
-  readonly format: "plan-and-train-backup";
+  readonly format: "mechastudio-backup" | "plan-and-train-backup";
   readonly version: 1;
   readonly records: DatabaseExport;
   readonly media: readonly MediaAsset[];
@@ -28,7 +29,7 @@ export async function createBackup(database: TrainingDatabase): Promise<Blob> {
   const [records, media] = await Promise.all([database.exportRecords(), database.listMedia()]);
   const zip = new JSZip();
   const metadata = media.map(({ data: _data, ...asset }) => asset);
-  const document: BackupDocument = { format: "plan-and-train-backup", version: 1, records, media: metadata };
+  const document: BackupDocument = { format: "mechastudio-backup", version: 1, records, media: metadata };
   zip.file(BACKUP_FILE, JSON.stringify(document, null, 2));
   for (const asset of media) zip.file(`media/${asset.id}`, asset.data);
   return zip.generateAsync({ type: "blob", compression: "DEFLATE", compressionOptions: { level: 6 } });
@@ -50,7 +51,7 @@ async function parseBackup(
 ): Promise<{ document: BackupDocument; media: StoredMedia[] }> {
   if (blob.size > MAX_BACKUP_BYTES) throw new Error("Backup exceeds the 300 MiB restore limit");
   const zip = await JSZip.loadAsync(await blob.arrayBuffer());
-  const documentFile = zip.file(BACKUP_FILE);
+  const documentFile = zip.file(BACKUP_FILE) ?? zip.file(LEGACY_BACKUP_FILE);
   if (!documentFile) throw new Error("Backup manifest is missing");
   const raw: unknown = JSON.parse(await documentFile.async("text"));
   if (!isBackupDocument(raw)) throw new Error("Backup manifest is invalid or unsupported");
@@ -74,7 +75,7 @@ function isBackupDocument(value: unknown): value is BackupDocument {
   if (!value || typeof value !== "object") return false;
   const candidate = value as Record<string, unknown>;
   return (
-    candidate.format === "plan-and-train-backup" &&
+    (candidate.format === "mechastudio-backup" || candidate.format === "plan-and-train-backup") &&
     candidate.version === 1 &&
     Array.isArray(candidate.media) &&
     !!candidate.records &&

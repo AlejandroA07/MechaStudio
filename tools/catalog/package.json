@@ -1,5 +1,5 @@
 {
-  "name": "@plan-and-train/catalog",
+  "name": "@mechastudio/catalog",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -9,7 +9,7 @@
     "build": "tsc -p tsconfig.json"
   },
   "dependencies": {
-    "@plan-and-train/domain": "*"
+    "@mechastudio/domain": "*"
   },
   "devDependencies": {
     "@types/node": "^26.1.2",

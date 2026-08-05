@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 
-import type { Routine } from "@plan-and-train/domain";
+import type { Routine } from "@mechastudio/domain";
 
 import { createApiApp, type ApiDependencies, type AuthenticatedProfile, type ResourceKind } from "./app";
 
@@ -13,7 +13,7 @@ describe("profile API authorization", () => {
     expect(anonymous.status).toBe(401);
 
     const ownList = await app.request("http://app.test/api/me/routines", {
-      headers: { Cookie: "pt_session=member-a" },
+      headers: { Cookie: "mechastudio_session=member-a" },
     });
     expect(ownList.status).toBe(200);
     await expect(ownList.json()).resolves.toEqual({ items: [expect.objectContaining({ id: "routine-a" })] });
@@ -21,7 +21,7 @@ describe("profile API authorization", () => {
     const crossProfile = await app.request("http://app.test/api/me/routines/routine-b", {
       method: "PUT",
       headers: {
-        Cookie: "pt_session=member-a; pt_csrf=csrf-a",
+        Cookie: "mechastudio_session=member-a; mechastudio_csrf=csrf-a",
         "Content-Type": "application/json",
         "X-CSRF-Token": "csrf-a",
       },
@@ -34,7 +34,7 @@ describe("profile API authorization", () => {
     const app = createApiApp(fakeDependencies());
     const response = await app.request("http://app.test/api/me/routines/routine-a", {
       method: "PUT",
-      headers: { Cookie: "pt_session=member-a", "Content-Type": "application/json" },
+      headers: { Cookie: "mechastudio_session=member-a", "Content-Type": "application/json" },
       body: JSON.stringify(routine("routine-a")),
     });
     expect(response.status).toBe(403);
@@ -52,7 +52,7 @@ describe("profile API authorization", () => {
     const response = await app.request("http://app.test/api/media/upload-intents", {
       method: "POST",
       headers: {
-        Cookie: "pt_session=member-a; pt_csrf=csrf-a",
+        Cookie: "mechastudio_session=member-a; mechastudio_csrf=csrf-a",
         "Content-Type": "application/json",
         "X-CSRF-Token": "csrf-a",
       },

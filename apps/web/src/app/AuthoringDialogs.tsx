@@ -8,7 +8,7 @@ import type {
   Routine,
   RoutineBlock,
   Step,
-} from "@plan-and-train/domain";
+} from "@mechastudio/domain";
 
 import { validateExerciseMedia } from "../media/validate-media";
 import type { TrainingDatabase } from "../storage/training-database";

@@ -1,5 +1,5 @@
 {
-  "name": "@plan-and-train/web",
+  "name": "@mechastudio/web",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -9,7 +9,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@plan-and-train/domain": "*",
+    "@mechastudio/domain": "*",
     "dexie": "^4.4.4",
     "jszip": "^3.10.1",
     "react": "^19.2.8",

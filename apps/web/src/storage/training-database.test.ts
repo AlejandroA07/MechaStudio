@@ -1,7 +1,7 @@
 import { IDBKeyRange, indexedDB } from "fake-indexeddb";
 import { afterEach, describe, expect, it } from "vitest";
 
-import type { Exercise, Routine } from "@plan-and-train/domain";
+import type { Exercise, Routine } from "@mechastudio/domain";
 
 import { createTrainingDatabase, type TrainingDatabase } from "./training-database";
 
@@ -26,6 +26,21 @@ describe("TrainingDatabase", () => {
       expect.objectContaining({ id: "custom-plank", name: "My Plank", origin: "custom" }),
     ]);
     expect(await database.listRoutines()).toEqual([expect.objectContaining({ id: "routine-1", name: "Core session" })]);
+  });
+
+  it("copies records from the legacy product database on first MechaStudio launch", async () => {
+    const legacy = createTrainingDatabase("plan-and-train", { indexedDB, IDBKeyRange });
+    const renamed = createTrainingDatabase(undefined, { indexedDB, IDBKeyRange });
+    database = renamed;
+    await legacy.initialize();
+    await legacy.saveExercise(customExercise());
+
+    await renamed.initialize();
+
+    expect(await renamed.listExercises()).toEqual([
+      expect.objectContaining({ id: "custom-plank", name: "My Plank", origin: "custom" }),
+    ]);
+    await legacy.delete();
   });
 });
 

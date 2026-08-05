@@ -16,7 +16,7 @@ export default defineConfig({
     { name: "webkit-iphone", use: { ...devices["iPhone 13"] } },
   ],
   webServer: {
-    command: "npm run preview --workspace @plan-and-train/web -- --host 127.0.0.1 --port 4173",
+    command: "npm run preview --workspace @mechastudio/web -- --host 127.0.0.1 --port 4173",
     url: "http://127.0.0.1:4173",
     reuseExistingServer: !process.env.CI,
     timeout: 30_000,

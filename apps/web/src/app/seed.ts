@@ -1,4 +1,4 @@
-import { exerciseSchema, type BlockTemplate, type Exercise, type Routine } from "@plan-and-train/domain";
+import { exerciseSchema, type BlockTemplate, type Exercise, type Routine } from "@mechastudio/domain";
 
 import type { TrainingDatabase } from "../storage/training-database";
 
@@ -102,10 +102,10 @@ function exercise(id: string, name: string, description: string): Exercise {
     name,
     description,
     origin: "catalog",
-    provider: "plan-and-train-seed",
+    provider: "mechastudio-seed",
     externalId: id,
     locale: "en",
-    attribution: "Plan & Train starter catalog",
+    attribution: "MechaStudio starter catalog",
     archived: false,
     createdAt: timestamp,
     updatedAt: timestamp,

@@ -1,5 +1,5 @@
 {
-  "name": "@plan-and-train/api",
+  "name": "@mechastudio/api",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -9,12 +9,11 @@
     "deploy": "wrangler deploy"
   },
   "dependencies": {
-    "@plan-and-train/domain": "*",
-    "hono": "^4.12.33",
+    "@mechastudio/domain": "*",
+    "hono": "^4.13.0",
     "zod": "^4.4.3"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^5.20260801.1",
-    "wrangler": "^4.118.0"
+    "@cloudflare/workers-types": "^5.20260730.1"
   }
 }

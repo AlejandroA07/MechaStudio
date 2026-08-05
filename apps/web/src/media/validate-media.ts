@@ -1,4 +1,4 @@
-import type { MediaAsset } from "@plan-and-train/domain";
+import type { MediaAsset } from "@mechastudio/domain";
 
 export const MAX_MEDIA_BYTES = 15 * 1024 * 1024;
 

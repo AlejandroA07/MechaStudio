@@ -1,4 +1,4 @@
-import type { BlockTemplate, Exercise, Plan, Routine, SessionRecord } from "@plan-and-train/domain";
+import type { BlockTemplate, Exercise, Plan, Routine, SessionRecord } from "@mechastudio/domain";
 
 import type { DatabaseExport, TrainingDatabase } from "../storage/training-database";
 
@@ -94,7 +94,7 @@ async function requestJson<T>(url: string, init: RequestInit, csrf: boolean): Pr
   const headers = new Headers(init.headers);
   headers.set("Accept", "application/json");
   headers.set("Content-Type", "application/json");
-  if (csrf) headers.set("X-CSRF-Token", readCookie("pt_csrf"));
+  if (csrf) headers.set("X-CSRF-Token", readCookie("mechastudio_csrf"));
   const response = await fetch(url, { ...init, headers, credentials: "same-origin" });
   if (!response.ok) {
     const body = (await response.json().catch(() => ({ error: "Request failed" }))) as { error?: string };

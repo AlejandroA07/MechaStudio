@@ -12,6 +12,7 @@ export default tseslint.config(
       "**/node_modules/**",
       "**/.wrangler/**",
       "**/*.d.ts",
+      ".scratch/**",
       ".harness/**",
       ".githooks/**",
     ],

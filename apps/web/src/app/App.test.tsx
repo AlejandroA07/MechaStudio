@@ -10,7 +10,7 @@ import { afterEach, describe, expect, it } from "vitest";
 import { createTrainingDatabase, type TrainingDatabase } from "../storage/training-database";
 import { App } from "./App";
 
-describe("Plan & Train", () => {
+describe("MechaStudio", () => {
   let database: TrainingDatabase | undefined;
 
   afterEach(async () => {
@@ -24,6 +24,7 @@ describe("Plan & Train", () => {
     render(<App database={database} />);
 
     expect(await screen.findByRole("heading", { name: "Today's focus" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "MechaStudio home" })).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Start session" }));
 
     expect(await screen.findByRole("heading", { name: "Stretching" })).toBeInTheDocument();

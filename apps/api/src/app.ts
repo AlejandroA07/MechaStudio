@@ -8,7 +8,7 @@ import {
   planSchema,
   routineSchema,
   sessionRecordSchema,
-} from "@plan-and-train/domain";
+} from "@mechastudio/domain";
 
 export type ProfileRole = "admin" | "member";
 export type ResourceKind = "exercises" | "blocks" | "routines" | "plans" | "sessions";
@@ -137,8 +137,8 @@ export function createApiApp(dependencies: ApiDependencies): Hono {
     if (!session) return context.json({ error: "Authentication required" }, 401);
     if (!validCsrf(context, session.profile)) return context.json({ error: "CSRF validation failed" }, 403);
     await dependencies.auth.logout(session.token);
-    deleteCookie(context, "pt_session", cookieOptions(dependencies.environment));
-    deleteCookie(context, "pt_csrf", { ...cookieOptions(dependencies.environment), httpOnly: false });
+    deleteCookie(context, "mechastudio_session", cookieOptions(dependencies.environment));
+    deleteCookie(context, "mechastudio_csrf", { ...cookieOptions(dependencies.environment), httpOnly: false });
     return context.body(null, 204);
   });
 
@@ -273,7 +273,7 @@ async function authenticate(
   context: Context,
   dependencies: ApiDependencies,
 ): Promise<{ token: string; profile: AuthenticatedProfile } | null> {
-  const token = getCookie(context, "pt_session");
+  const token = getCookie(context, "mechastudio_session");
   if (!token || token.length > 256) return null;
   const profile = await dependencies.auth.authenticate(token);
   return profile ? { token, profile } : null;
@@ -292,7 +292,7 @@ async function requireAdmin(
 
 function validCsrf(context: Context, profile: AuthenticatedProfile): boolean {
   const header = context.req.header("X-CSRF-Token") ?? "";
-  const cookie = getCookie(context, "pt_csrf") ?? "";
+  const cookie = getCookie(context, "mechastudio_csrf") ?? "";
   return constantTimeEqual(header, profile.csrfToken) && constantTimeEqual(cookie, profile.csrfToken);
 }
 
@@ -309,12 +309,12 @@ function setSessionCookies(
   sessionToken: string,
   environment: ApiDependencies["environment"],
 ): void {
-  setCookie(context, "pt_session", sessionToken, {
+  setCookie(context, "mechastudio_session", sessionToken, {
     ...cookieOptions(environment),
     httpOnly: true,
     maxAge: 60 * 60 * 24 * 30,
   });
-  setCookie(context, "pt_csrf", profile.csrfToken, {
+  setCookie(context, "mechastudio_csrf", profile.csrfToken, {
     ...cookieOptions(environment),
     httpOnly: false,
     maxAge: 60 * 60 * 24 * 30,

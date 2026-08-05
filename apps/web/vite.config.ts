@@ -9,8 +9,8 @@ export default defineConfig({
       registerType: "prompt",
       includeAssets: ["icon.svg"],
       manifest: {
-        name: "Plan & Train",
-        short_name: "Plan & Train",
+        name: "MechaStudio",
+        short_name: "MechaStudio",
         description: "Build flexible routines and run focused training sessions.",
         theme_color: "#f7f4ed",
         background_color: "#f7f4ed",

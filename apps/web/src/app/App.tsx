@@ -10,7 +10,7 @@ import {
   type Plan,
   type Routine,
   type SessionRunnerState,
-} from "@plan-and-train/domain";
+} from "@mechastudio/domain";
 
 import { syncWithCloud } from "../cloud/cloud-client";
 import { ExerciseMedia } from "../media/ExerciseMedia";
@@ -168,7 +168,7 @@ export function App({ database: providedDatabase }: AppProps) {
   if (!ready)
     return (
       <main className="loading">
-        <div className="loading__mark">P&T</div>
+        <div className="loading__mark">MS</div>
         <p>Preparing your local library…</p>
       </main>
     );
@@ -180,9 +180,9 @@ export function App({ database: providedDatabase }: AppProps) {
   return (
     <div className="app-shell">
       <header className="topbar">
-        <button className="brand" onClick={() => setView("today")} aria-label="Plan & Train home">
-          <span className="brand__mark">P&T</span>
-          <span>Plan & Train</span>
+        <button className="brand" onClick={() => setView("today")} aria-label="MechaStudio home">
+          <span className="brand__mark">MS</span>
+          <span>MechaStudio</span>
         </button>
         <button
           className="menu-button"

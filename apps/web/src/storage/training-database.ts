@@ -16,7 +16,7 @@ import {
   type Routine,
   type SessionRecord,
   type SessionRunnerState,
-} from "@plan-and-train/domain";
+} from "@mechastudio/domain";
 
 export interface IndexedDbDependencies {
   readonly indexedDB: IDBFactory;
@@ -68,8 +68,21 @@ interface SingletonRecord<T> {
   readonly value: T;
 }
 
+const CURRENT_DATABASE_NAME = "mechastudio";
+const LEGACY_DATABASE_NAME = "plan-and-train";
+const DATABASE_STORES = {
+  exercises: "id, name, origin, [provider+externalId], archived, updatedAt",
+  media: "id, kind, storage",
+  categories: "id, name, seeded",
+  blockTemplates: "id, name, categoryId, archived, updatedAt",
+  routines: "id, name, archived, updatedAt",
+  plans: "id, name, startDate, archived, updatedAt",
+  sessions: "id, date, status, startedAt",
+  state: "key",
+} as const;
+
 export function createTrainingDatabase(
-  name = "plan-and-train",
+  name = CURRENT_DATABASE_NAME,
   dependencies: IndexedDbDependencies = { indexedDB: globalThis.indexedDB, IDBKeyRange: globalThis.IDBKeyRange },
 ): TrainingDatabase {
   return new DexieTrainingDatabase(name, dependencies);
@@ -85,19 +98,12 @@ class DexieTrainingDatabase implements TrainingDatabase {
   private readonly plans: EntityTable<Plan, "id">;
   private readonly sessions: EntityTable<SessionRecord, "id">;
   private readonly state: EntityTable<SingletonRecord<SessionRunnerState>, "key">;
+  private readonly dependencies: IndexedDbDependencies;
 
   constructor(name: string, dependencies: IndexedDbDependencies) {
+    this.dependencies = dependencies;
     this.db = new Dexie(name, dependencies);
-    this.db.version(1).stores({
-      exercises: "id, name, origin, [provider+externalId], archived, updatedAt",
-      media: "id, kind, storage",
-      categories: "id, name, seeded",
-      blockTemplates: "id, name, categoryId, archived, updatedAt",
-      routines: "id, name, archived, updatedAt",
-      plans: "id, name, startDate, archived, updatedAt",
-      sessions: "id, date, status, startedAt",
-      state: "key",
-    });
+    this.db.version(1).stores(DATABASE_STORES);
     this.exercises = this.db.table("exercises");
     this.media = this.db.table("media");
     this.categories = this.db.table("categories");
@@ -110,11 +116,70 @@ class DexieTrainingDatabase implements TrainingDatabase {
 
   async initialize(): Promise<void> {
     await this.db.open();
+    if (this.db.name === CURRENT_DATABASE_NAME) await this.migrateLegacyDatabase();
     await this.db.transaction("rw", this.categories, async () => {
       for (const category of SEEDED_CATEGORIES) {
         if (!(await this.categories.get(category.id))) await this.categories.add(category);
       }
     });
+  }
+
+  private async migrateLegacyDatabase(): Promise<void> {
+    const currentCounts = await Promise.all([
+      this.exercises.count(),
+      this.media.count(),
+      this.categories.count(),
+      this.blockTemplates.count(),
+      this.routines.count(),
+      this.plans.count(),
+      this.sessions.count(),
+      this.state.count(),
+    ]);
+    if (currentCounts.some((count) => count > 0)) return;
+
+    const legacy = new Dexie(LEGACY_DATABASE_NAME, this.dependencies);
+    legacy.version(1).stores(DATABASE_STORES);
+    await legacy.open();
+    const [exercises, media, categories, blocks, routines, plans, sessions, state] = await Promise.all([
+      legacy.table<Exercise>("exercises").toArray(),
+      legacy.table<StoredMedia>("media").toArray(),
+      legacy.table<BlockCategory>("categories").toArray(),
+      legacy.table<BlockTemplate>("blockTemplates").toArray(),
+      legacy.table<Routine>("routines").toArray(),
+      legacy.table<Plan>("plans").toArray(),
+      legacy.table<SessionRecord>("sessions").toArray(),
+      legacy.table<SingletonRecord<SessionRunnerState>>("state").toArray(),
+    ]);
+    const hasLegacyData = [exercises, media, categories, blocks, routines, plans, sessions, state].some(
+      (records) => records.length > 0,
+    );
+    if (hasLegacyData) {
+      await this.db.transaction(
+        "rw",
+        [
+          this.exercises,
+          this.media,
+          this.categories,
+          this.blockTemplates,
+          this.routines,
+          this.plans,
+          this.sessions,
+          this.state,
+        ],
+        async () => {
+          await this.exercises.bulkPut(exercises);
+          await this.media.bulkPut(media);
+          await this.categories.bulkPut(categories);
+          await this.blockTemplates.bulkPut(blocks);
+          await this.routines.bulkPut(routines);
+          await this.plans.bulkPut(plans);
+          await this.sessions.bulkPut(sessions);
+          await this.state.bulkPut(state);
+        },
+      );
+    }
+    legacy.close();
+    if (!hasLegacyData) await legacy.delete();
   }
 
   async mergeCatalog(exercises: readonly Exercise[]): Promise<void> {

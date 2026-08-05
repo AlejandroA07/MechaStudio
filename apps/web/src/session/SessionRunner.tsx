@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 
-import { reduceSessionRunner, type SessionRunnerState } from "@plan-and-train/domain";
+import { reduceSessionRunner, type SessionRunnerState } from "@mechastudio/domain";
 
 import { ExerciseMedia } from "../media/ExerciseMedia";
 import type { TrainingDatabase } from "../storage/training-database";

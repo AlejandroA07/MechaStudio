@@ -1,5 +1,5 @@
 {
-  "name": "plan-and-train",
+  "name": "mechastudio",
   "private": true,
   "version": "0.1.0",
   "type": "module",
@@ -9,8 +9,8 @@
     "tools/*"
   ],
   "scripts": {
-    "dev": "npm run dev --workspace @plan-and-train/web",
-    "build": "npm run build --workspace @plan-and-train/domain && npm run build --workspace @plan-and-train/web && npm run build --workspace @plan-and-train/api",
+    "dev": "npm run dev --workspace @mechastudio/web",
+    "build": "npm run build --workspace @mechastudio/domain && npm run build --workspace @mechastudio/web && npm run build --workspace @mechastudio/api",
     "typecheck": "tsc -b",
     "lint": "eslint . --max-warnings=0",
     "format": "prettier --write .",
@@ -18,12 +18,20 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "test:e2e": "playwright test",
-    "catalog:fetch": "npm run fetch --workspace @plan-and-train/catalog",
-    "catalog:build": "npm run build:catalog --workspace @plan-and-train/catalog",
+    "catalog:fetch": "npm run fetch --workspace @mechastudio/catalog",
+    "catalog:build": "npm run build:catalog --workspace @mechastudio/catalog",
     "verify": "node scripts/verify.mjs"
   },
   "engines": {
     "node": ">=22.0.0"
+  },
+  "overrides": {
+    "undici": "7.29.0",
+    "wrangler": {
+      "miniflare": {
+        "undici": "7.29.0"
+      }
+    }
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -41,6 +49,7 @@
     "prettier": "^3.9.6",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.65.0",
-    "vitest": "^4.1.10"
+    "vitest": "^4.1.10",
+    "wrangler": "4.114.0"
   }
 }
