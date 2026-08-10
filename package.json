@@ -45,12 +45,12 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.3",
     "fake-indexeddb": "^6.2.5",
-    "globals": "^17.8.0",
+    "globals": "^17.9.0",
     "jsdom": "^29.1.1",
     "prettier": "^3.9.6",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.65.0",
     "vitest": "^4.1.10",
-    "wrangler": "4.115.0"
+    "wrangler": "4.118.0"
   }
 }
