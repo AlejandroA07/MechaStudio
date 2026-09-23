@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "@mechastudio/domain": "*",
-    "hono": "^4.13.3",
-    "zod": "^4.4.3"
+    "hono": "^4.13.8",
+    "zod": "^4.6.5"
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20260819.1"
